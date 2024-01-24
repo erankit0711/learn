@@ -1,8 +1,7 @@
 package Com.First.CrudApp.User.Controller;
 
 import Com.First.CrudApp.Util.CustomResponse;
-import Com.First.CrudApp.User.Model.User;
-import Com.First.CrudApp.User.Model.UserDto;
+import Com.First.CrudApp.User.Dto.UserDto;
 import Com.First.CrudApp.User.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
@@ -20,9 +19,9 @@ public class UserController
 
     //Create User
     @PostMapping("/create")
-    public ResponseEntity<CustomResponse<UserDto>> createUser(@RequestBody User user)
+    public ResponseEntity<CustomResponse<UserDto>> createUser(@RequestBody UserDto userDto)
     {
-        CustomResponse<UserDto> response = userService.createUser(user);
+        CustomResponse<UserDto> response = userService.createUser(userDto);
         return new ResponseEntity<>(response, HttpStatusCode.valueOf(response.getStatusCode()));
     }
 
@@ -43,15 +42,15 @@ public class UserController
 
     //Update User
     @PutMapping
-    public ResponseEntity<CustomResponse<UserDto>> updateUser(@RequestBody User user)
+    public ResponseEntity<CustomResponse<UserDto>> updateUser(@RequestBody UserDto userDto)
     {
-        CustomResponse<UserDto> response = userService.updateUser(user);
+        CustomResponse<UserDto> response = userService.updateUser(userDto);
         return new ResponseEntity<>(response, HttpStatusCode.valueOf(response.getStatusCode()));
     }
 
     //Delete User
     @DeleteMapping("/{userId}")
-    public ResponseEntity<CustomResponse<String>> deleteUser(@PathVariable String userId)
+    public ResponseEntity<CustomResponse<String>> deleteUser(@PathVariable Long userId)
     {
         CustomResponse<String> response = userService.deleteUser(userId);
         return new ResponseEntity<>(response, HttpStatusCode.valueOf(response.getStatusCode()));

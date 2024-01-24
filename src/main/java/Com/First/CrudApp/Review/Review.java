@@ -1,7 +1,7 @@
 package Com.First.CrudApp.Review;
 
 import Com.First.CrudApp.Product.Model.Product;
-import Com.First.CrudApp.User.Model.User;
+import Com.First.CrudApp.User.Domain.User;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;

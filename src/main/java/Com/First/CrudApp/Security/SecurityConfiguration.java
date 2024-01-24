@@ -27,7 +27,7 @@ public class SecurityConfiguration {
         return http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests((authz) -> authz
-                        .anyRequest().authenticated()
+                        .requestMatchers("/**").permitAll()
                 )
                 .httpBasic(withDefaults())
                 .authenticationProvider(daoAuthenticationProvider())

@@ -1,9 +1,11 @@
-package Com.First.CrudApp.User.Model;
+package Com.First.CrudApp.User.Domain;
 
 import Com.First.CrudApp.Address.Address;
 import Com.First.CrudApp.Order.Model.Order;
 import Com.First.CrudApp.Review.Review;
 import Com.First.CrudApp.Security.Model.Role;
+import Com.First.CrudApp.Util.IdGenerator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Where;
 import org.springframework.security.core.GrantedAuthority;
@@ -22,11 +24,8 @@ public class User implements UserDetails
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "numeric_id_generator")
-    @org.hibernate.annotations.GenericGenerator(
-            name = "numeric_id_generator",
-            strategy = "Com.First.CrudApp.Shared.Model.IdGenerator"
-    )
+
+    @Column(nullable = false)
     private  String userId;
     @Column(nullable = false)
     private String firstName;
@@ -35,12 +34,13 @@ public class User implements UserDetails
     @Column(nullable = false)
     private String username;
     @Column(nullable = false)
+
     private String email;
     @Column(nullable = false)
     private String phoneNumber;
     @Column(nullable = false)
     private String password;
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "user_address",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "address_id"))
@@ -76,11 +76,22 @@ public class User implements UserDetails
     public void setDeleted(Boolean deleted) {
         isDeleted = deleted;
     }
+    public User(){
 
-    public User() {
+    }
+
+    public User(String firstName, String lastName, String username, String email, String phoneNumber, String password, List<Address> address) {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
         this.isDeleted = false;
+        this.userId= IdGenerator.generate(this);
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
     }
 
 
@@ -108,6 +119,13 @@ public class User implements UserDetails
         this.reviewList = reviewList;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getUserId() {
         return userId;

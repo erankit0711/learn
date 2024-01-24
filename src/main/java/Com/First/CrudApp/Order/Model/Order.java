@@ -2,7 +2,7 @@ package Com.First.CrudApp.Order.Model;
 
 import Com.First.CrudApp.Address.Address;
 import Com.First.CrudApp.Shipment.Shipment;
-import Com.First.CrudApp.User.Model.User;
+import Com.First.CrudApp.User.Domain.User;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;

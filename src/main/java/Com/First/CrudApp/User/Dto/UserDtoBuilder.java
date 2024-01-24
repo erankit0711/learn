@@ -1,13 +1,18 @@
-package Com.First.CrudApp.User.Model;
+package Com.First.CrudApp.User.Dto;
+
+import Com.First.CrudApp.Address.Address;
+
+import java.util.List;
 
 public class UserDtoBuilder {
     private String userId;
     private String firstName;
     private String lastName;
     private String username;
+    private String password;
     private String email;
     private String phoneNumber;
-    private String address;
+    private List<Address> address;
 
     public UserDtoBuilder() {
 
@@ -33,6 +38,11 @@ public class UserDtoBuilder {
         return this;
     }
 
+    public UserDtoBuilder setPassword(String password) {
+        this.password = password;
+        return this;
+    }
+
     public UserDtoBuilder setEmail(String email) {
         this.email = email;
         return this;
@@ -43,12 +53,12 @@ public class UserDtoBuilder {
         return this;
     }
 
-    public UserDtoBuilder setAddress(String address) {
+    public UserDtoBuilder setAddress(List<Address> address) {
         this.address = address;
         return this;
     }
 
     public UserDto build(){
-        return new UserDto(userId,firstName,lastName,username,email,phoneNumber,address);
+        return new UserDto(userId,firstName,lastName,username,password,email,phoneNumber,address);
     }
 }

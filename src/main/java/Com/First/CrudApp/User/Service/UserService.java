@@ -1,9 +1,10 @@
 package Com.First.CrudApp.User.Service;
 
+import Com.First.CrudApp.User.Domain.UserBuilder;
 import Com.First.CrudApp.Util.CustomResponse;
-import Com.First.CrudApp.User.Model.UserDto;
-import Com.First.CrudApp.User.Model.User;
-import Com.First.CrudApp.User.Model.UserDtoBuilder;
+import Com.First.CrudApp.User.Dto.UserDto;
+import Com.First.CrudApp.User.Domain.User;
+import Com.First.CrudApp.User.Dto.UserDtoBuilder;
 import Com.First.CrudApp.User.Repository.UserRepository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +21,12 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    //Create User
     @Transactional(rollbackFor = Exception.class)
-    public CustomResponse<UserDto> createUser(User user){
+    //Create User
+    public CustomResponse<UserDto> createUser(UserDto userDto){
         try {
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
+            User user = userDtoToUser(userDto);
             User u = UserRepo.save(user);
             UserDto data = userToDto(u);
             return CustomResponse.success(data, null, HttpStatus.CREATED.value());
@@ -53,7 +55,7 @@ public class UserService {
 
     public CustomResponse<UserDto> getUserById(String userId) {
         try {
-            User user = UserRepo.findById(userId).orElseThrow(()-> new Exception("No User found with id "+userId+"."));
+            User user = UserRepo.findByUserId(userId).orElseThrow(()-> new Exception("No User found with id "+userId+"."));
             UserDto data = userToDto(user);
             return CustomResponse.success(data, null, HttpStatus.OK.value());
 
@@ -65,16 +67,20 @@ public class UserService {
 
     //Update User
     @Transactional(rollbackFor = Exception.class)
-    public CustomResponse<UserDto> updateUser(User user){
+    public CustomResponse<UserDto> updateUser(UserDto userDto){
         try {
-            String userId = user.getUserId();
-            boolean isUserExist = UserRepo.existsById(userId);
+            User user = UserRepo.findByUserId(userDto.getUserId()).orElseThrow(null);
+            Long id = user.getId();
+            boolean isUserExist = UserRepo.existsById(id);
             if(isUserExist) {
+                user = userDtoToUser(userDto);
+                user.setId(id);
+                user.setUserId(userDto.getUserId());
                 User u = UserRepo.save(user);
                 UserDto data = userToDto(u);
                 return CustomResponse.success(data, null, HttpStatus.OK.value());
             } else {
-                throw new Exception("User with id "+userId+" does not exist.");
+                throw new Exception("User with id "+userDto.getUserId()+" does not exist.");
             }
 
         } catch (Exception e) {
@@ -85,7 +91,7 @@ public class UserService {
 
     //Delete User
     @Transactional(rollbackFor = Exception.class)
-    public CustomResponse<String> deleteUser(String userId) {
+    public CustomResponse<String> deleteUser(Long userId) {
         try {
             User user = UserRepo.findById(userId).orElseThrow(()-> new Exception("User with id "+userId+" does not exist."));
             user.setDeleted(true);
@@ -107,4 +113,15 @@ public class UserService {
                 .setPhoneNumber(user.getPhoneNumber()).build();
         return userDto;
     }
+
+    public User userDtoToUser(UserDto userDto){
+
+        User user = new UserBuilder().setFirstName(userDto.getFirstName())
+                .setLastName(userDto.getLastName()).setUsername(userDto.getUsername())
+                .setEmail(userDto.getEmail()).setPhoneNumber(userDto.getPhoneNumber())
+                .setPassword(userDto.getPassword()).setAddress(userDto.getAddress()).build();
+
+        return user;
+    }
+
 }

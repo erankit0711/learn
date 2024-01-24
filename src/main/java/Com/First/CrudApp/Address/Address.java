@@ -1,7 +1,7 @@
 package Com.First.CrudApp.Address;
 
 import Com.First.CrudApp.Order.Model.Order;
-import Com.First.CrudApp.User.Model.User;
+import Com.First.CrudApp.User.Domain.User;
 import jakarta.persistence.*;
 
 import java.util.List;

@@ -1,6 +1,6 @@
 package Com.First.CrudApp.Security.Service;
 
-import Com.First.CrudApp.User.Model.User;
+import Com.First.CrudApp.User.Domain.User;
 import Com.First.CrudApp.User.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

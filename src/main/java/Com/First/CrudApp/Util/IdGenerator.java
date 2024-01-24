@@ -1,5 +1,7 @@
 package Com.First.CrudApp.Util;
 
+import Com.First.CrudApp.Product.Model.Product;
+import Com.First.CrudApp.User.Domain.User;
 import org.hibernate.HibernateException;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.id.IdentifierGenerator;
@@ -8,12 +10,19 @@ import java.io.Serializable;
 import java.util.Random;
 
 
-public class IdGenerator implements IdentifierGenerator {
+public class IdGenerator {
 
-    @Override
-    public Serializable generate(SharedSessionContractImplementor session, Object obj) throws HibernateException {
+    public static String generate(Object object){
         long currentTimeMillis = System.currentTimeMillis();
-        String id = String.valueOf(currentTimeMillis).substring(3) + getRandomDigits(4);
+        String id;
+        if(object instanceof User){
+            id ="1";
+        }else if (object instanceof Product){
+            id = "2";
+        }else{
+            id = "3";
+        }
+        id = id+String.valueOf(currentTimeMillis).substring(3) + getRandomDigits(4);
         return id;
     }
 

@@ -1,6 +1,6 @@
 package Com.First.CrudApp.Security.Model;
 
-import Com.First.CrudApp.User.Model.User;
+import Com.First.CrudApp.User.Domain.User;
 import jakarta.persistence.*;
 
 import java.util.List;
