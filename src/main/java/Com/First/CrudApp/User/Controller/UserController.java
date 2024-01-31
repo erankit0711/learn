@@ -18,10 +18,10 @@ public class UserController
     private UserService userService;
 
     //Create User
-    @PostMapping("/create")
-    public ResponseEntity<CustomResponse<UserDto>> createUser(@RequestBody UserDto userDto)
+    @PostMapping("/register")
+    public ResponseEntity<CustomResponse<UserDto>> registerUser(@RequestBody UserDto userDto)
     {
-        CustomResponse<UserDto> response = userService.createUser(userDto);
+        CustomResponse<UserDto> response = userService.registerUser(userDto);
         return new ResponseEntity<>(response, HttpStatusCode.valueOf(response.getStatusCode()));
     }
 

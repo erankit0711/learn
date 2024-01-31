@@ -21,9 +21,9 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @Transactional(rollbackFor = Exception.class)
     //Create User
-    public CustomResponse<UserDto> createUser(UserDto userDto){
+    @Transactional(rollbackFor = Exception.class)
+    public CustomResponse<UserDto> registerUser(UserDto userDto) {
         try {
             userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
             User user = userDtoToUser(userDto);
@@ -69,20 +69,16 @@ public class UserService {
     @Transactional(rollbackFor = Exception.class)
     public CustomResponse<UserDto> updateUser(UserDto userDto){
         try {
-            User user = UserRepo.findByUserId(userDto.getUserId()).orElseThrow(null);
+            User user = UserRepo.findByUserId(userDto.getUserId()).orElseThrow(
+                    ()->new NullPointerException("User does not exist with id: "+userDto.getUserId())
+            );
             Long id = user.getId();
-            boolean isUserExist = UserRepo.existsById(id);
-            if(isUserExist) {
-                user = userDtoToUser(userDto);
-                user.setId(id);
-                user.setUserId(userDto.getUserId());
-                User u = UserRepo.save(user);
-                UserDto data = userToDto(u);
-                return CustomResponse.success(data, null, HttpStatus.OK.value());
-            } else {
-                throw new Exception("User with id "+userDto.getUserId()+" does not exist.");
-            }
-
+            user = userDtoToUser(userDto);
+            user.setId(id);
+            user.setUserId(userDto.getUserId());
+            User u = UserRepo.save(user);
+            UserDto data = userToDto(u);
+            return CustomResponse.success(data, null, HttpStatus.OK.value());
         } catch (Exception e) {
             e.printStackTrace();
             return CustomResponse.failure(null, e.getMessage(), HttpStatus.BAD_REQUEST.value());
