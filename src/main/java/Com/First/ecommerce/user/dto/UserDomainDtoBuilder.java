@@ -4,7 +4,7 @@ import Com.First.ecommerce.address.Address;
 
 import java.util.List;
 
-public class UserDtoBuilder {
+public class UserDomainDtoBuilder {
     private String userId;
     private String firstName;
     private String lastName;
@@ -14,51 +14,51 @@ public class UserDtoBuilder {
     private String phoneNumber;
     private List<Address> address;
 
-    public UserDtoBuilder() {
+    public UserDomainDtoBuilder() {
 
     }
 
-    public UserDtoBuilder setUserId(String userId) {
+    public UserDomainDtoBuilder setUserId(String userId) {
         this.userId = userId;
         return this;
     }
 
-    public UserDtoBuilder setFirstName(String firstName) {
+    public UserDomainDtoBuilder setFirstName(String firstName) {
         this.firstName = firstName;
         return this;
     }
 
-    public UserDtoBuilder setLastName(String lastName) {
+    public UserDomainDtoBuilder setLastName(String lastName) {
         this.lastName = lastName;
         return this;
     }
 
-    public UserDtoBuilder setUsername(String username) {
+    public UserDomainDtoBuilder setUsername(String username) {
         this.username = username;
         return this;
     }
 
-    public UserDtoBuilder setPassword(String password) {
+    public UserDomainDtoBuilder setPassword(String password) {
         this.password = password;
         return this;
     }
 
-    public UserDtoBuilder setEmail(String email) {
+    public UserDomainDtoBuilder setEmail(String email) {
         this.email = email;
         return this;
     }
 
-    public UserDtoBuilder setPhoneNumber(String phoneNumber) {
+    public UserDomainDtoBuilder setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
         return this;
     }
 
-    public UserDtoBuilder setAddress(List<Address> address) {
+    public UserDomainDtoBuilder setAddress(List<Address> address) {
         this.address = address;
         return this;
     }
 
-    public UserDto build(){
-        return new UserDto(userId,firstName,lastName,username,password,email,phoneNumber,address);
+    public UserDomainDto build(){
+        return new UserDomainDto(userId,firstName,lastName,username,password,email,phoneNumber,address);
     }
 }

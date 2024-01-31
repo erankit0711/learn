@@ -4,7 +4,7 @@ import Com.First.ecommerce.address.Address;
 
 import java.util.List;
 
-public class UserDto {
+public class UserDomainDto {
     private String userId;
     private String firstName;
     private String lastName;
@@ -14,7 +14,7 @@ public class UserDto {
     private String phoneNumber;
     private List<Address> address;
 
-    public UserDto(String userId, String firstName, String lastName, String username, String password, String email, String phoneNumber, List<Address> address) {
+    public UserDomainDto(String userId, String firstName, String lastName, String username, String password, String email, String phoneNumber, List<Address> address) {
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;

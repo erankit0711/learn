@@ -1,7 +1,7 @@
 package Com.First.ecommerce.user.controller;
 
 import Com.First.ecommerce.util.CustomResponse;
-import Com.First.ecommerce.user.dto.UserDto;
+import Com.First.ecommerce.user.dto.UserDomainDto;
 import Com.First.ecommerce.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
@@ -19,38 +19,38 @@ public class UserController
 
     //Create User
     @PostMapping("/register")
-    public ResponseEntity<CustomResponse<UserDto>> registerUser(@RequestBody UserDto userDto)
+    public ResponseEntity<CustomResponse<UserDomainDto>> registerUser(@RequestBody UserDomainDto userDomainDto)
     {
-        CustomResponse<UserDto> response = userService.registerUser(userDto);
+        CustomResponse<UserDomainDto> response = userService.registerUser(userDomainDto);
         return new ResponseEntity<>(response, HttpStatusCode.valueOf(response.getStatusCode()));
     }
 
     //Read User
     @GetMapping
-    public ResponseEntity<CustomResponse<List<UserDto>>> getAllUsers()
+    public ResponseEntity<CustomResponse<List<UserDomainDto>>> getAllUsers()
     {
-        CustomResponse<List<UserDto>> response = userService.getAllUser();
+        CustomResponse<List<UserDomainDto>> response = userService.getAllUser();
         return new ResponseEntity<>(response, HttpStatusCode.valueOf(response.getStatusCode()));
     }
     @GetMapping("/{userId}")
-    public ResponseEntity<CustomResponse<UserDto>> getUserById(@PathVariable String userId)
+    public ResponseEntity<CustomResponse<UserDomainDto>> getUserById(@PathVariable String userId)
     {
-        CustomResponse<UserDto> response = userService.getUserById(userId);
+        CustomResponse<UserDomainDto> response = userService.getUserById(userId);
         return new ResponseEntity<>(response, HttpStatusCode.valueOf(response.getStatusCode()));
     }
 
 
     //Update User
     @PutMapping
-    public ResponseEntity<CustomResponse<UserDto>> updateUser(@RequestBody UserDto userDto)
+    public ResponseEntity<CustomResponse<UserDomainDto>> updateUser(@RequestBody UserDomainDto userDomainDto)
     {
-        CustomResponse<UserDto> response = userService.updateUser(userDto);
+        CustomResponse<UserDomainDto> response = userService.updateUser(userDomainDto);
         return new ResponseEntity<>(response, HttpStatusCode.valueOf(response.getStatusCode()));
     }
 
     //Delete User
     @DeleteMapping("/{userId}")
-    public ResponseEntity<CustomResponse<String>> deleteUser(@PathVariable Long userId)
+    public ResponseEntity<CustomResponse<String>> deleteUser(@PathVariable String userId)
     {
         CustomResponse<String> response = userService.deleteUser(userId);
         return new ResponseEntity<>(response, HttpStatusCode.valueOf(response.getStatusCode()));
