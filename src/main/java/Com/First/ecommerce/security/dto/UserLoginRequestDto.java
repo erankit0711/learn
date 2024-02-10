@@ -1,10 +1,10 @@
-package Com.First.ecommerce.security.Model;
+package Com.First.ecommerce.security.dto;
 
-public class JwtRequest {
+public class UserLoginRequestDto {
     private String username;
     private String password;
 
-    public JwtRequest(String username, String password) {
+    public UserLoginRequestDto(String username, String password) {
         this.username = username;
         this.password = password;
     }

@@ -1,16 +1,17 @@
-package Com.First.ecommerce.user.dto;
+package Com.First.ecommerce.security.dto;
 
-public class UserDomainDto {
+public class UserRegisterRequestDto {
     private String userId;
     private String username;
     private String email;
+    private String password;
 
-    public UserDomainDto(String userId, String username, String email) {
+    public UserRegisterRequestDto(String userId, String username, String email, String password) {
         this.userId = userId;
         this.username = username;
         this.email = email;
+        this.password = password;
     }
-
 
     public String getUserId() {
         return userId;
@@ -34,5 +35,13 @@ public class UserDomainDto {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

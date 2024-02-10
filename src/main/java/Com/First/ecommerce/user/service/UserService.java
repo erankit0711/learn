@@ -1,50 +1,35 @@
 package Com.First.ecommerce.user.service;
 
-import Com.First.ecommerce.user.converter.UserDomainDtoConverter;
-import Com.First.ecommerce.user.domain.UserBuilder;
-import Com.First.ecommerce.util.CustomResponse;
-import Com.First.ecommerce.user.dto.UserDomainDto;
 import Com.First.ecommerce.user.domain.User;
-import Com.First.ecommerce.user.dto.UserDomainDtoBuilder;
+import Com.First.ecommerce.user.domain.UserBuilder;
+import Com.First.ecommerce.user.converter.UserDomainDtoConverter;
+import Com.First.ecommerce.user.dto.UserDomainDto;
+import Com.First.ecommerce.user.dto.UserUpdateRequestDto;
 import Com.First.ecommerce.user.repository.UserRepository;
-import org.checkerframework.checker.units.qual.A;
-import org.springframework.transaction.annotation.Transactional;
+
+import Com.First.ecommerce.util.CustomResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
 @Service
 public class UserService {
     @Autowired
-    private UserRepository UserRepo;
+    private UserRepository userRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
     private UserDomainDtoConverter userDomainDtoConverter;
 
-    //Create User
-    @Transactional(rollbackFor = Exception.class)
-    public CustomResponse<UserDomainDto> registerUser(UserDomainDto userDomainDto) {
-        try {
-            userDomainDto.setPassword(passwordEncoder.encode(userDomainDto.getPassword()));
-            User user = userDtoToUser(userDomainDto);
-            User u = UserRepo.save(user);
-            UserDomainDto data = userDomainDtoConverter.convert(u);
-            return CustomResponse.success(data, null, HttpStatus.CREATED.value());
 
-        } catch (Exception e){
-            e.printStackTrace();
-            return CustomResponse.failure(null, e.getMessage(), HttpStatus.BAD_REQUEST.value());
-        }
-    }
-
-    //Read User
-    public CustomResponse<List<UserDomainDto>> getAllUser() {
+    //Read User1
+    public CustomResponse<List<UserDomainDto>> getAllUsers() {
         try {
-            List<User> users = UserRepo.findAll();
+            List<User> users = userRepository.findAll();
             List<UserDomainDto> data = userDomainDtoConverter.convertList(users);
             return CustomResponse.success(data, null, HttpStatus.OK.value());
 
@@ -56,7 +41,9 @@ public class UserService {
 
     public CustomResponse<UserDomainDto> getUserById(String userId) {
         try {
-            User user = UserRepo.findByUserId(userId).orElseThrow(()-> new Exception("No User found with id "+userId+"."));
+            User user = userRepository.findByUserId(userId).orElseThrow(()->
+                    new Exception("No User1 found with id "+userId+".")
+            );
             UserDomainDto data = userDomainDtoConverter.convert(user);
             return CustomResponse.success(data, null, HttpStatus.OK.value());
 
@@ -66,19 +53,24 @@ public class UserService {
         }
     }
 
-    //Update User
+    //Update User1
     @Transactional(rollbackFor = Exception.class)
-    public CustomResponse<UserDomainDto> updateUser(UserDomainDto userDomainDto){
+    public CustomResponse<UserDomainDto> updateUser(UserUpdateRequestDto requestDto){
         try {
-            User user = UserRepo.findByUserId(userDomainDto.getUserId()).orElseThrow(
-                    ()->new NullPointerException("User does not exist with id: "+ userDomainDto.getUserId())
+            User user = userRepository.findByUserId(requestDto.getUserId()).orElseThrow(()->
+                    new NullPointerException("User1 does not exist with id: "+ requestDto.getUserId())
             );
-            Long id = user.getId();
-            user = userDtoToUser(userDomainDto);
-            user.setId(id);
-            user.setUserId(userDomainDto.getUserId());
-            User u = UserRepo.save(user);
-            UserDomainDto data = userDomainDtoConverter.convert(user);
+            requestDto.setPassword(passwordEncoder.encode(requestDto.getPassword()));
+            User updatedUser = new UserBuilder()
+                    .setEmail(requestDto.getEmail())
+                    .setUsername(requestDto.getUsername())
+                    .setPassword(requestDto.getPassword())
+                    .build();
+
+            updatedUser.setId(user.getId());
+            updatedUser.setUserId(user.getUserId());
+            userRepository.save(updatedUser);
+            UserDomainDto data = userDomainDtoConverter.convert(updatedUser);
             return CustomResponse.success(data, null, HttpStatus.OK.value());
         } catch (Exception e) {
             e.printStackTrace();
@@ -86,29 +78,21 @@ public class UserService {
         }
     }
 
-    //Delete User
+    //Delete User1
     @Transactional(rollbackFor = Exception.class)
     public CustomResponse<String> deleteUser(String userId) {
         try {
-            User user = UserRepo.findByUserId(userId).orElseThrow(()-> new Exception("User with id "+userId+" does not exist."));
+            User user = userRepository.findByUserId(userId).orElseThrow(()->
+                    new Exception("User1 with id "+userId+" does not exist.")
+            );
             user.setDeleted(true);
-            UserRepo.save(user);
+            userRepository.save(user);
             return CustomResponse.success("Successfully deleted.", null, HttpStatus.OK.value());
 
         } catch (Exception e) {
             e.printStackTrace();
             return CustomResponse.failure(null, e.getMessage(), HttpStatus.NOT_FOUND.value());
         }
-    }
-
-    public User userDtoToUser(UserDomainDto userDomainDto){
-
-        User user = new UserBuilder().setFirstName(userDomainDto.getFirstName())
-                .setLastName(userDomainDto.getLastName()).setUsername(userDomainDto.getUsername())
-                .setEmail(userDomainDto.getEmail()).setPhoneNumber(userDomainDto.getPhoneNumber())
-                .setPassword(userDomainDto.getPassword()).setAddress(userDomainDto.getAddress()).build();
-
-        return user;
     }
 
 }

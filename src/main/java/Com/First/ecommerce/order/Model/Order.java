@@ -2,7 +2,7 @@ package Com.First.ecommerce.order.Model;
 
 import Com.First.ecommerce.address.Address;
 import Com.First.ecommerce.shipment.Shipment;
-import Com.First.ecommerce.user.domain.User;
+import Com.First.ecommerce.user.domain.UserDetail;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -16,7 +16,7 @@ public class Order
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long orderId;
     @ManyToOne
-    private User userId;
+    private UserDetail userDetailId;
     @OneToMany(mappedBy = "orderId")
     private List<OrderItem> orderItemList;
     @ManyToOne
@@ -40,12 +40,12 @@ public class Order
         this.orderId = orderId;
     }
 
-    public User getUserId() {
-        return userId;
+    public UserDetail getUserId() {
+        return userDetailId;
     }
 
-    public void setUserId(User userId) {
-        this.userId = userId;
+    public void setUserId(UserDetail userId) {
+        this.userDetailId = userId;
     }
 
     public List<OrderItem> getOrderItemList() {

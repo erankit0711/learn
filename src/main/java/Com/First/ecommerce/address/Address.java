@@ -1,7 +1,7 @@
 package Com.First.ecommerce.address;
 
 import Com.First.ecommerce.order.Model.Order;
-import Com.First.ecommerce.user.domain.User;
+import Com.First.ecommerce.user.domain.UserDetail;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -18,8 +18,8 @@ public class Address {
     private String state;
     private String pincode;
     private String country;
-    @ManyToMany(mappedBy = "address")
-    private List<User> users;
+    @ManyToMany(mappedBy = "address", fetch = FetchType.LAZY)
+    private List<UserDetail> userDetails;
     @OneToMany(mappedBy = "shippingAddress")
     private List<Order> orders;
 
@@ -31,12 +31,12 @@ public class Address {
         this.addressId = addressId;
     }
 
-    public List<User> getUsers() {
-        return users;
+    public List<UserDetail> getUsers() {
+        return userDetails;
     }
 
-    public void setUsers(List<User> users) {
-        this.users = users;
+    public void setUsers(List<UserDetail> users) {
+        this.userDetails = users;
     }
 
     public List<Order> getOrders() {

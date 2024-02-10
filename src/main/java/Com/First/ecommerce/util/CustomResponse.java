@@ -6,6 +6,9 @@ public class CustomResponse<T> {
     private String errorMessage;
     private Integer statusCode;
 
+    public CustomResponse() {
+    }
+
     public CustomResponse(boolean success, T data, String errorMessage, Integer statusCode) {
         this.success = success;
         Data = data;

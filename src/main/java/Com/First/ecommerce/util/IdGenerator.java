@@ -1,7 +1,7 @@
 package Com.First.ecommerce.util;
 
-import Com.First.ecommerce.product.Model.Product;
 import Com.First.ecommerce.user.domain.User;
+import Com.First.ecommerce.user.domain.UserDetail;
 
 import java.util.Random;
 
@@ -11,9 +11,9 @@ public class IdGenerator {
     public static String generate(Object object){
         long currentTimeMillis = System.currentTimeMillis();
         String id;
-        if(object instanceof User){
+        if(object instanceof UserDetail){
             id ="1";
-        }else if (object instanceof Product){
+        }else if (object instanceof User){
             id = "2";
         }else{
             id = "3";

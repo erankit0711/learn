@@ -1,7 +1,7 @@
 package Com.First.ecommerce.review;
 
 import Com.First.ecommerce.product.Model.Product;
-import Com.First.ecommerce.user.domain.User;
+import Com.First.ecommerce.user.domain.UserDetail;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -14,7 +14,7 @@ public class Review {
     @ManyToOne
     private Product productId;
     @ManyToOne
-    private User userId;
+    private UserDetail userDetailId;
     private Integer rating;
     private String comment;
     private LocalDateTime createdAt;
@@ -41,12 +41,12 @@ public class Review {
         this.productId = productId;
     }
 
-    public User getUserId() {
-        return userId;
+    public UserDetail getUserId() {
+        return userDetailId;
     }
 
-    public void setUserId(User userId) {
-        this.userId = userId;
+    public void setUserId(UserDetail userId) {
+        this.userDetailId = userId;
     }
 
     public Integer getRating() {

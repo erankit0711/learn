@@ -7,8 +7,8 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.List;
+import java.util.Objects;
 
 @Component
 public class UserDomainDtoConverter implements Converter<User, UserDomainDto> {
@@ -18,9 +18,8 @@ public class UserDomainDtoConverter implements Converter<User, UserDomainDto> {
             return null;
         }
         return new UserDomainDtoBuilder().setUserId(user.getUserId())
-                .setLastName(user.getLastName()).setFirstName(user.getFirstName())
-                .setUsername(user.getUsername()).setEmail(user.getEmail())
-                .setPhoneNumber(user.getPhoneNumber()).build();
+                .setEmail(user.getEmail())
+                .setUsername(user.getUsername()).build();
     }
     public List<UserDomainDto> convertList(List<User> users){
         List<UserDomainDto> userDomainDtos = new ArrayList<>();

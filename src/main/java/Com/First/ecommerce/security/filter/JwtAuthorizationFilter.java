@@ -1,6 +1,6 @@
-package Com.First.ecommerce.security.Model;
+package Com.First.ecommerce.security.filter;
 
-import Com.First.ecommerce.security.Service.CustomUserDetailService;
+import Com.First.ecommerce.security.service.CustomUserDetailService;
 import Com.First.ecommerce.security.Utils.JwtHelper;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -26,7 +26,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     @Autowired
     JwtHelper jwtHelper;
     @Autowired
-    CustomUserDetailService userDetailService;
+    CustomUserDetailService customUserDetailService;
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String requestHeader = request.getHeader("Authorization");
@@ -54,7 +54,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         }
 
         if(username != null && SecurityContextHolder.getContext().getAuthentication() == null){
-            UserDetails userDetails = this.userDetailService.loadUserByUsername(username);
+            UserDetails userDetails = this.customUserDetailService.loadUserByUsername(username);
             Boolean validateToken = this.jwtHelper.validateToken(token, userDetails);
             if(validateToken){
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());

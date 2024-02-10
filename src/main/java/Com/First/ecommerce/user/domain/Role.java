@@ -1,4 +1,5 @@
-package Com.First.ecommerce.security.Model;
+package Com.First.ecommerce.user.domain;
+
 
 import Com.First.ecommerce.user.domain.User;
 import jakarta.persistence.*;
@@ -10,9 +11,12 @@ public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
+
     @ManyToMany(mappedBy = "roles")
     private List<User> users;
+
     public Long getId() {
         return id;
     }
@@ -28,6 +32,5 @@ public class Role {
     public void setName(String name) {
         this.name = name;
     }
-
 
 }

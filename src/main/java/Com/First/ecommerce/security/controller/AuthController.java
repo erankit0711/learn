@@ -1,67 +1,38 @@
 package Com.First.ecommerce.security.controller;
 
-import Com.First.ecommerce.security.Model.JwtRequest;
-import Com.First.ecommerce.security.Service.CustomUserDetailService;
-import Com.First.ecommerce.security.Utils.JwtHelper;
-import Com.First.ecommerce.util.Cache.CacheStore;
+import Com.First.ecommerce.security.dto.UserLoginRequestDto;
+import Com.First.ecommerce.security.dto.UserRegisterRequestDto;
+import Com.First.ecommerce.security.service.AuthService;
+
+import Com.First.ecommerce.user.dto.UserDomainDto;
 import Com.First.ecommerce.util.CustomResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/users")
 public class AuthController {
     @Autowired
-    private CustomUserDetailService userDetailService;
-    @Autowired
-    private AuthenticationManager manager;
-    @Autowired
-    private JwtHelper jwtHelper;
-    @Autowired
-    CacheStore<String> tokenCache;
+    AuthService authService;
     private Logger logger = LoggerFactory.getLogger(AuthController.class);
-    @GetMapping("test-zero")
-    public String testZero(){
-        return "No authentication required";
-    }
-    @GetMapping("test-one")
-    public String testOne(){
-        return "ADMIN Role based authentication required";
-    }
-    @GetMapping("test-two")
-    public String testTwo(){
-        return "USER Role based authentication required";
-    }
-    @PostMapping("/users/login")
-    public ResponseEntity<CustomResponse<String>> login(@RequestBody JwtRequest request){
-        this.doAuthenticate(request.getUsername(), request.getPassword());
-        String token;
-        if(tokenCache.get(request.getUsername()) != null){
-            token = tokenCache.get(request.getUsername());
-        }else{
-            UserDetails userDetails = userDetailService.loadUserByUsername(request.getUsername());
-            token = jwtHelper.generateToken(userDetails);
-            tokenCache.add(request.getUsername(), token);
-        }
-        CustomResponse<String> response = CustomResponse.success(token, null, HttpStatus.OK.value());
+
+    //Register User
+    @PostMapping("/register")
+    public ResponseEntity<CustomResponse<UserDomainDto>> registerUser(@RequestBody UserRegisterRequestDto request) {
+        CustomResponse<UserDomainDto> response = authService.registerUser(request);
         return new ResponseEntity<>(response, HttpStatusCode.valueOf(response.getStatusCode()));
     }
-    public void doAuthenticate(String email, String password){
-        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(email, password);
-        try{
-            manager.authenticate(authentication);
-        }catch (BadCredentialsException e){
-            throw new BadCredentialsException("Invalid username or password!!");
-        }
+
+    //Login User
+    @PostMapping("/login")
+    public ResponseEntity<CustomResponse<String>> login(@RequestBody UserLoginRequestDto request){
+        CustomResponse<String> response = authService.login(request);
+        return new ResponseEntity<>(response, HttpStatusCode.valueOf(response.getStatusCode()));
     }
 
 }
