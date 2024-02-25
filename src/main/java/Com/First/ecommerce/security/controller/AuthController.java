@@ -6,11 +6,9 @@ import Com.First.ecommerce.security.service.AuthService;
 
 import Com.First.ecommerce.user.dto.UserDomainDto;
 import Com.First.ecommerce.util.CustomResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import org.springframework.http.HttpStatusCode;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,20 +17,19 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
     @Autowired
     AuthService authService;
-    private Logger logger = LoggerFactory.getLogger(AuthController.class);
 
     //Register User
     @PostMapping("/register")
-    public ResponseEntity<CustomResponse<UserDomainDto>> registerUser(@RequestBody UserRegisterRequestDto request) {
-        CustomResponse<UserDomainDto> response = authService.registerUser(request);
-        return new ResponseEntity<>(response, HttpStatusCode.valueOf(response.getStatusCode()));
+    public ResponseEntity<CustomResponse<UserDomainDto>> registerUser(
+        @RequestBody UserRegisterRequestDto request) {
+        UserDomainDto response = authService.registerUser(request);
+        return new ResponseEntity<>(CustomResponse.success(response, null), HttpStatus.CREATED);
     }
 
     //Login User
     @PostMapping("/login")
-    public ResponseEntity<CustomResponse<String>> login(@RequestBody UserLoginRequestDto request){
-        CustomResponse<String> response = authService.login(request);
-        return new ResponseEntity<>(response, HttpStatusCode.valueOf(response.getStatusCode()));
+    public ResponseEntity<CustomResponse<String>> login(@RequestBody UserLoginRequestDto request) {
+        String response = authService.login(request);
+        return new ResponseEntity<>(CustomResponse.success(response, null), HttpStatus.OK);
     }
-
 }

@@ -5,6 +5,7 @@ import Com.First.ecommerce.product.Model.ProductDto;
 import Com.First.ecommerce.product.Model.ProductDtoBuilder;
 import Com.First.ecommerce.product.Repository.ProductRepository;
 import Com.First.ecommerce.util.CustomResponse;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -13,138 +14,65 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class ProductService
-{
+public class ProductService {
     @Autowired
     private ProductRepository productRepo;
 
-    //Create Product
-    public CustomResponse<ProductDto> createProduct(Product product)
-    {
-        try
-        {
-            Product p = productRepo.save(product);
-            ProductDto data = productToDto(p);
-            return new CustomResponse<>(true, data, null, HttpStatus.CREATED.value());
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            return new CustomResponse<>(false,null,e.getMessage(),HttpStatus.BAD_REQUEST.value());
-        }
+    public ProductDto createProduct(Product product) {
+        Product p = productRepo.save(product);
+        ProductDto data = productToDto(p);
+        return data;
     }
 
-
-    //Read Product
-    public CustomResponse<List<ProductDto>> getAllProduct()
-    {
-        try
-        {
-            List<Product> products = productRepo.findAll();
-            List<ProductDto> data = new ArrayList<>();
-            for(Product product:products){
-                data.add(productToDto(product));
-            }
-            return new CustomResponse<>(true,data,null,HttpStatus.OK.value());
+    public List<ProductDto> getAllProduct() {
+        List<Product> products = productRepo.findAll();
+        List<ProductDto> data = new ArrayList<>();
+        for (Product product : products) {
+            data.add(productToDto(product));
         }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            return new CustomResponse<>(false,null,"Resource not found",HttpStatus.NOT_FOUND.value());
-        }
+        return data;
     }
-    public CustomResponse<ProductDto> getProductById(Long productId)
-    {
-        try
-        {
+
+    public ProductDto getProductById(Long productId) {
+        Product product = productRepo.findById(productId).orElseThrow(() ->
+            new EntityNotFoundException("No Product found with id " + productId + ".")
+        );
+        ProductDto data = productToDto(product);
+        return data;
+    }
+
+    public ProductDto updateProduct(Product product) {
+        Long productId = product.getProductId();
+        if (productId != null) {
             boolean isProductExist = productRepo.existsById(productId);
-            if(isProductExist)
-            {
-               Product product = productRepo.findById(productId).orElse(null);
-               ProductDto data = productToDto(product);
-                return new CustomResponse<>(true,data,null,HttpStatus.OK.value());
+            if (isProductExist) {
+                Product p = productRepo.save(product);
+                ProductDto data = productToDto(p);
+                return data;
+            } else {
+                throw new EntityNotFoundException(
+                    "Product with id " + productId + " does not exist.");
             }
-            else
-            {
-                throw new Exception("No Product found with id "+productId+".");
-            }
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            return new CustomResponse<>(false,null,e.getMessage(),HttpStatus.NOT_FOUND.value());
+        } else {
+            throw new NullPointerException("Product Id must not be null");
         }
     }
 
-
-    //Update Product
-    public CustomResponse<ProductDto> updateProduct(Product product)
-    {
-        try
-        {
-            Long productId = product.getProductId();
-            if(productId != null)
-            {
-                boolean isProductExist = productRepo.existsById(productId);
-                if(isProductExist)
-                {
-                    Product p = productRepo.save(product);
-                    ProductDto data = productToDto(p);
-                    return new CustomResponse<>(true,data,null, HttpStatus.OK.value());
-                }
-                else
-                {
-                    throw new Exception("Product with id "+productId+" does not exist.");
-                }
-            }
-            else
-            {
-                throw new NullPointerException("Product Id must not be null");
-            }
+    public String deleteProduct(Long productId) {
+        boolean isProductExist = productRepo.existsById(productId);
+        if (isProductExist) {
+            productRepo.deleteById(productId);
+            return "Successfully deleted.";
+        } else {
+            throw new EntityNotFoundException("Product with id " + productId + " does not exist.");
         }
-        catch (NullPointerException e)
-        {
-            e.printStackTrace();
-            return new CustomResponse<>(false,null,e.getMessage(),HttpStatus.NOT_FOUND.value());
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            return new CustomResponse<>(false,null,e.getMessage(),HttpStatus.BAD_REQUEST.value());
-        }
-    }
-
-
-    //Delete Product
-    public CustomResponse<String> deleteProduct(Long productId)
-    {
-        try
-        {
-            boolean isProductExist = productRepo.existsById(productId);
-            if(isProductExist)
-            {
-                productRepo.deleteById(productId);
-                return new CustomResponse<>(true,"Successfully deleted.",null,HttpStatus.OK.value());
-            }
-            else
-            {
-                throw new Exception("Product with id "+productId+" does not exist.");
-            }
-
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            return new CustomResponse<>(false,null,e.getMessage(),HttpStatus.NOT_FOUND.value());
-        }
-
     }
 
     //DTO
-    public ProductDto productToDto(Product product){
+    public ProductDto productToDto(Product product) {
         return new ProductDtoBuilder().setProductId(product.getProductId())
-                .setName(product.getName()).setDescription(product.getDescription())
-                .setPrice(product.getPrice()).setCategoryId(product.getProductId())
-                .setQuantity(product.getQuantity()).build();
+            .setName(product.getName()).setDescription(product.getDescription())
+            .setPrice(product.getPrice()).setCategoryId(product.getProductId())
+            .setQuantity(product.getQuantity()).build();
     }
 }

@@ -1,6 +1,6 @@
 package Com.First.ecommerce.user.dto;
 
-import Com.First.ecommerce.address.Address;
+import Com.First.ecommerce.address.domain.Address;
 import java.util.List;
 
 public class UserDetailCreateRequestDto {

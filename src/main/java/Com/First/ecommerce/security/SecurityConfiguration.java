@@ -1,6 +1,6 @@
 package Com.First.ecommerce.security;
 
-import Com.First.ecommerce.security.filter.JwtAuthorizationFilter;
+import Com.First.ecommerce.security.Utils.JwtAuthorizationFilter;
 import Com.First.ecommerce.security.service.CustomUserDetailService;
 import Com.First.ecommerce.security.Utils.JwtAuthenticationEntryPoint;
 import org.springframework.beans.factory.annotation.Autowired;

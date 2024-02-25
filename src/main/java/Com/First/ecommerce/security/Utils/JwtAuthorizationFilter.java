@@ -1,4 +1,4 @@
-package Com.First.ecommerce.security.filter;
+package Com.First.ecommerce.security.Utils;
 
 import Com.First.ecommerce.security.service.CustomUserDetailService;
 import Com.First.ecommerce.security.Utils.JwtHelper;
@@ -23,48 +23,54 @@ import java.io.IOException;
 @Component
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
     private Logger logger = LoggerFactory.getLogger(OncePerRequestFilter.class);
+
     @Autowired
     JwtHelper jwtHelper;
+
     @Autowired
     CustomUserDetailService customUserDetailService;
+
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
+        FilterChain filterChain) throws ServletException, IOException {
         String requestHeader = request.getHeader("Authorization");
         logger.info("Header : {}", requestHeader);
         String username = null;
         String token = null;
-        if(requestHeader != null && requestHeader.startsWith("Bearer")){
+        if (requestHeader != null && requestHeader.startsWith("Bearer")) {
             token = requestHeader.substring(7);
             try {
                 username = this.jwtHelper.getUsernameFromToken(token);
-            }catch (IllegalArgumentException e){
+            } catch (IllegalArgumentException e) {
                 logger.info("Illegal argument while fetching username!!");
                 e.printStackTrace();
-            }catch (ExpiredJwtException e){
+            } catch (ExpiredJwtException e) {
                 logger.info("Given token is expired!!");
                 e.printStackTrace();
-            }catch (MalformedJwtException e){
+            } catch (MalformedJwtException e) {
                 logger.info("Some changes done in token !!");
                 e.printStackTrace();
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-        }else {
+        } else {
             logger.info("Invalid Header value!!");
         }
 
-        if(username != null && SecurityContextHolder.getContext().getAuthentication() == null){
+        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = this.customUserDetailService.loadUserByUsername(username);
             Boolean validateToken = this.jwtHelper.validateToken(token, userDetails);
-            if(validateToken){
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+            if (validateToken) {
+                UsernamePasswordAuthenticationToken authentication =
+                    new UsernamePasswordAuthenticationToken(userDetails, null,
+                        userDetails.getAuthorities());
+                authentication.setDetails(
+                    new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-            }else{
+            } else {
                 logger.info("validation fails !!");
             }
         }
         filterChain.doFilter(request, response);
-
     }
 }

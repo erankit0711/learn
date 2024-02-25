@@ -1,6 +1,6 @@
 package Com.First.ecommerce.order.Model;
 
-import Com.First.ecommerce.address.Address;
+import Com.First.ecommerce.address.domain.Address;
 import Com.First.ecommerce.shipment.Shipment;
 import Com.First.ecommerce.user.domain.UserDetail;
 import jakarta.persistence.*;

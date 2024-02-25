@@ -3,6 +3,7 @@ import Com.First.ecommerce.order.Model.Order;
 import Com.First.ecommerce.order.Service.OrderService;
 import Com.First.ecommerce.util.CustomResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +18,7 @@ public class OrderController {
     @PostMapping("/create")
     public ResponseEntity<CustomResponse<Order>> createOrder(@RequestBody Order order){
         CustomResponse<Order> response = ordersService.createOrders(order);
-        return new ResponseEntity<>(response, HttpStatusCode.valueOf(response.getStatusCode()));
+        return new ResponseEntity<>(response, HttpStatus.OK);
 
     }
     @GetMapping("/GetOrder")

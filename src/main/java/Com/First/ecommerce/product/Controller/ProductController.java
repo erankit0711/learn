@@ -14,46 +14,41 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/products")
-public class ProductController
-{
+public class ProductController {
     @Autowired
     ProductService productService;
 
     //Create Product
     @PostMapping("/create")
-    public ResponseEntity<CustomResponse<ProductDto>> createProduct(@RequestBody Product product)
-    {
-        CustomResponse<ProductDto> response = productService.createProduct(product);
-        return new ResponseEntity<>(response, HttpStatusCode.valueOf(response.getStatusCode()));
+    public ResponseEntity<CustomResponse<ProductDto>> createProduct(@RequestBody Product product) {
+        ProductDto response = productService.createProduct(product);
+        return new ResponseEntity<>(CustomResponse.success(response, null), HttpStatus.CREATED);
     }
 
     //Read Product
     @GetMapping
-    public ResponseEntity<CustomResponse<List<ProductDto>>> getAllProduct()
-    {
-        CustomResponse<List<ProductDto>> response =  productService.getAllProduct();
-        return new ResponseEntity<>(response,HttpStatus.valueOf(response.getStatusCode()));
+    public ResponseEntity<CustomResponse<List<ProductDto>>> getAllProduct() {
+        List<ProductDto> response = productService.getAllProduct();
+        return new ResponseEntity<>(CustomResponse.success(response, null), HttpStatus.OK);
     }
+
     @GetMapping("/{productId}")
-    public ResponseEntity<CustomResponse<ProductDto>> getProductById(@PathVariable Long productId)
-    {
-        CustomResponse<ProductDto> response = productService.getProductById(productId);
-        return new ResponseEntity<>(response,HttpStatus.valueOf(response.getStatusCode()));
+    public ResponseEntity<CustomResponse<ProductDto>> getProductById(@PathVariable Long productId) {
+        ProductDto response = productService.getProductById(productId);
+        return new ResponseEntity<>(CustomResponse.success(response, null), HttpStatus.OK);
     }
 
     //Update Product
     @PutMapping
-    public ResponseEntity<CustomResponse<ProductDto>> updateProduct(@RequestBody Product model)
-    {
-        CustomResponse<ProductDto> response =  productService.updateProduct(model);
-        return new ResponseEntity<>(response, HttpStatusCode.valueOf(response.getStatusCode()));
+    public ResponseEntity<CustomResponse<ProductDto>> updateProduct(@RequestBody Product model) {
+        ProductDto response = productService.updateProduct(model);
+        return new ResponseEntity<>(CustomResponse.success(response, null), HttpStatus.OK);
     }
 
     //Delete Product
     @DeleteMapping("/{productId}")
-    public ResponseEntity<CustomResponse<String>> deleteProduct(@PathVariable Long productId)
-    {
-        CustomResponse<String> response = productService.deleteProduct(productId);
-        return new ResponseEntity<>(response, HttpStatus.valueOf(response.getStatusCode()));
+    public ResponseEntity<CustomResponse<String>> deleteProduct(@PathVariable Long productId) {
+        String response = productService.deleteProduct(productId);
+        return new ResponseEntity<>(CustomResponse.success(response, null), HttpStatus.OK);
     }
 }

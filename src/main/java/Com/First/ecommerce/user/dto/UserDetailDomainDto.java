@@ -1,9 +1,5 @@
 package Com.First.ecommerce.user.dto;
 
-import Com.First.ecommerce.address.Address;
-
-import java.util.List;
-
 public class UserDetailDomainDto {
     private String userDetailId;
     private String firstName;

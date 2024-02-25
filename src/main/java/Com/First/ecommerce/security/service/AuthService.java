@@ -1,6 +1,5 @@
 package Com.First.ecommerce.security.service;
 
-
 import Com.First.ecommerce.security.Utils.JwtHelper;
 import Com.First.ecommerce.security.dto.UserLoginRequestDto;
 import Com.First.ecommerce.security.dto.UserRegisterRequestDto;
@@ -12,6 +11,7 @@ import Com.First.ecommerce.user.repository.UserRepository;
 import Com.First.ecommerce.util.Cache.CacheStore;
 import Com.First.ecommerce.util.CustomResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -24,61 +24,61 @@ import org.springframework.transaction.annotation.Transactional;
 public class AuthService {
     @Autowired
     private CustomUserDetailService customUserDetailService;
+
     @Autowired
     private AuthenticationManager manager;
+
     @Autowired
     private JwtHelper jwtHelper;
+
     @Autowired
     CacheStore<String> tokenCache;
+
     @Autowired
     private UserRepository userRepository;
+
     @Autowired
     private PasswordEncoder passwordEncoder;
+
     @Autowired
     private UserDomainDtoConverter UserDomainDtoConverter;
 
-    //Login User
-    public CustomResponse<String> login(UserLoginRequestDto request){
+    //Login UserServletException
+    public String login(UserLoginRequestDto request) {
         this.doAuthenticate(request.getUsername(), request.getPassword());
         String token;
-        if(tokenCache.get(request.getUsername()) != null){
+        if (tokenCache.get(request.getUsername()) != null) {
             token = tokenCache.get(request.getUsername());
-        }else{
+        } else {
             User user = customUserDetailService.loadUserByUsername(request.getUsername());
             token = jwtHelper.generateToken(user);
             tokenCache.add(request.getUsername(), token);
         }
-        return CustomResponse.success(token, null, HttpStatus.OK.value());
+        return token;
     }
 
     //Register User
     @Transactional(rollbackFor = Exception.class)
-    public CustomResponse<UserDomainDto> registerUser(UserRegisterRequestDto request) {
-        try {
-            request.setPassword(passwordEncoder.encode(request.getPassword()));
-            User user = new UserBuilder()
-                    .setEmail(request.getEmail())
-                    .setUsername(request.getUsername())
-                    .setPassword(request.getPassword())
-                    .build();
+    public UserDomainDto registerUser(UserRegisterRequestDto request) {
+        request.setPassword(passwordEncoder.encode(request.getPassword()));
+        User user = new UserBuilder()
+            .setEmail(request.getEmail())
+            .setUsername(request.getUsername())
+            .setPassword(request.getPassword())
+            .build();
 
-            User u = userRepository.save(user);
-            UserDomainDto data = UserDomainDtoConverter.convert(u);
-            return CustomResponse.success(data, null, HttpStatus.CREATED.value());
-
-        } catch (Exception e){
-            e.printStackTrace();
-            return CustomResponse.failure(null, e.getMessage(), HttpStatus.BAD_REQUEST.value());
-        }
+        User savedUser = userRepository.save(user);
+        UserDomainDto data = UserDomainDtoConverter.convert(savedUser);
+        return data;
     }
 
-    public void doAuthenticate(String email, String password){
-        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(email, password);
-        try{
+    public void doAuthenticate(String email, String password) {
+        UsernamePasswordAuthenticationToken authentication =
+            new UsernamePasswordAuthenticationToken(email, password);
+        try {
             manager.authenticate(authentication);
-        }catch (BadCredentialsException e){
+        } catch (BadCredentialsException e) {
             throw new BadCredentialsException("Invalid username or password!!");
         }
     }
-
 }

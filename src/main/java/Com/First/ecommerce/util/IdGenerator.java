@@ -1,5 +1,8 @@
 package Com.First.ecommerce.util;
 
+import Com.First.ecommerce.address.domain.Address;
+import Com.First.ecommerce.order.Model.Order;
+import Com.First.ecommerce.product.Model.Product;
 import Com.First.ecommerce.user.domain.User;
 import Com.First.ecommerce.user.domain.UserDetail;
 
@@ -10,16 +13,25 @@ public class IdGenerator {
 
     public static String generate(Object object){
         long currentTimeMillis = System.currentTimeMillis();
-        String id;
-        if(object instanceof UserDetail){
-            id ="1";
-        }else if (object instanceof User){
-            id = "2";
-        }else{
-            id = "3";
+        String prefixId = "";
+        String suffixId = "";
+        String fullId = "";
+        if(object instanceof User){
+            prefixId ="USR";
+        }else if (object instanceof UserDetail){
+            prefixId = "USD";
+        }else if (object instanceof Order){
+            prefixId = "ORD";
+        } else if (object instanceof Address) {
+            prefixId = "ADD";
+        } else if (object instanceof Product) {
+            prefixId = "PRO";
+        } else {
+            prefixId = "OTH";
         }
-        id = id+String.valueOf(currentTimeMillis).substring(3) + getRandomDigits(4);
-        return id;
+        suffixId = String.valueOf(currentTimeMillis).substring(3) + getRandomDigits(4);
+        fullId = prefixId + suffixId;
+        return fullId;
     }
 
     private static String getRandomDigits(int length) {

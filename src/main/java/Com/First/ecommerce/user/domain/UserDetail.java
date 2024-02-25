@@ -1,6 +1,6 @@
 package Com.First.ecommerce.user.domain;
 
-import Com.First.ecommerce.address.Address;
+import Com.First.ecommerce.address.domain.Address;
 import Com.First.ecommerce.order.Model.Order;
 import Com.First.ecommerce.review.Review;
 import Com.First.ecommerce.util.IdGenerator;
@@ -13,22 +13,21 @@ import java.util.List;
 @Entity
 @Table(name = "userDetail")
 @Where(clause = "is_Deleted=0")
-public class UserDetail
-{
+public class UserDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "userDetailId",nullable = false)
-    private  String userDetailId;
+    @Column(name = "userDetailId", nullable = false, unique = true)
+    private String userDetailId;
 
-    @Column(name = "firstName",nullable = false)
+    @Column(name = "firstName", nullable = false)
     private String firstName;
 
-    @Column(name="lastName")
+    @Column(name = "lastName")
     private String lastName;
 
-    @Column(name = "phoneNumber",nullable = false)
+    @Column(name = "phoneNumber", nullable = false)
     private String phoneNumber;
 
     @JoinColumn(name = "userId", referencedColumnName = "userId")
@@ -36,9 +35,9 @@ public class UserDetail
     private User userId;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(name = "user_address",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "address_id"))
+    @JoinTable(name = "user_detail_address",
+        joinColumns = @JoinColumn(name = "user_detail_id", referencedColumnName = "userDetailId"),
+        inverseJoinColumns = @JoinColumn(name = "address_id"))
     private List<Address> address;
 
     @OneToMany(mappedBy = "userDetailId")
@@ -47,24 +46,25 @@ public class UserDetail
     @OneToMany(mappedBy = "userDetailId")
     private List<Review> reviewList;
 
-    @Column(name = "createdAt",nullable = false)
+    @Column(name = "createdAt", nullable = false)
     private LocalDateTime createdAt;
 
-    @Column(name = "updatedAt",nullable = false)
+    @Column(name = "updatedAt", nullable = false)
     private LocalDateTime updatedAt;
 
-    @Column(name = "isDeleted",nullable = false)
+    @Column(name = "isDeleted", nullable = false)
     private Boolean isDeleted;
 
-    public UserDetail(){
+    public UserDetail() {
 
     }
 
-    public UserDetail(String firstName, String lastName, String phoneNumber, User userId, List<Address> address) {
+    public UserDetail(String firstName, String lastName, String phoneNumber, User userId,
+        List<Address> address) {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
         this.isDeleted = false;
-        this.userDetailId= IdGenerator.generate(this);
+        this.userDetailId = IdGenerator.generate(this);
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;

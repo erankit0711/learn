@@ -4,23 +4,21 @@ public class CustomResponse<T> {
     private boolean success;
     private T Data;
     private String errorMessage;
-    private Integer statusCode;
 
     public CustomResponse() {
     }
 
-    public CustomResponse(boolean success, T data, String errorMessage, Integer statusCode) {
+    public CustomResponse(boolean success, T data, String errorMessage) {
         this.success = success;
         Data = data;
         this.errorMessage = errorMessage;
-        this.statusCode = statusCode;
     }
 
-    public static <T> CustomResponse<T> success(T data, String errorMessage, Integer statusCode){
-        return new CustomResponse<>(true, data, errorMessage, statusCode);
+    public static <T> CustomResponse<T> success(T data, String errorMessage){
+        return new CustomResponse<>(true, data, errorMessage);
     }
-    public static <T> CustomResponse<T> failure(T data, String errorMessage, Integer statusCode){
-        return new CustomResponse<>(false, data, errorMessage, statusCode);
+    public static <T> CustomResponse<T> failure(T data, String errorMessage){
+        return new CustomResponse<>(false, data, errorMessage);
     }
 
     public boolean isSuccess() {
@@ -47,11 +45,4 @@ public class CustomResponse<T> {
         this.errorMessage = errorMessage;
     }
 
-    public Integer getStatusCode() {
-        return statusCode;
-    }
-
-    public void setStatusCode(Integer statusCode) {
-        this.statusCode = statusCode;
-    }
 }

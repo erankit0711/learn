@@ -17,10 +17,10 @@ public class OrganisationService {
     public CustomResponse<Organisation> createOrganisation(Organisation organisation){
         try{
             Organisation org = organisationRepo.save(organisation);
-            return new CustomResponse<>(true, org, null, HttpStatus.CREATED.value());
+            return new CustomResponse<>(true, org, null);
         }catch (Exception e){
             e.printStackTrace();
-            return new CustomResponse<>(false, null, e.getMessage(), HttpStatus.BAD_REQUEST.value());
+            return new CustomResponse<>(false, null, e.getMessage());
         }
     }
 
@@ -28,10 +28,10 @@ public class OrganisationService {
     public CustomResponse<List<Organisation>> getAllOrganisation(){
         try{
             List<Organisation> organisations = organisationRepo.findAll();
-            return new CustomResponse<>(true, organisations, null, HttpStatus.OK.value());
+            return new CustomResponse<>(true, organisations, null);
         } catch (Exception e){
             e.printStackTrace();
-            return new CustomResponse<>(false, null, e.getMessage(), HttpStatus.BAD_REQUEST.value());
+            return new CustomResponse<>(false, null, e.getMessage());
         }
     }
 
@@ -40,13 +40,13 @@ public class OrganisationService {
             boolean isOrganisationExist = organisationRepo.existsById(id);
             if(isOrganisationExist){
                 Organisation organisation = organisationRepo.findById(id).orElse(null);
-                return new CustomResponse<>(true, organisation, null, HttpStatus.OK.value());
+                return new CustomResponse<>(true, organisation, null);
             }else{
                 throw new Exception("No organisation found with id "+ id+".");
             }
         }catch (Exception e){
             e.printStackTrace();
-            return new CustomResponse<>(false, null, e.getMessage(), HttpStatus.NOT_FOUND.value());
+            return new CustomResponse<>(false, null, e.getMessage());
         }
     }
 
@@ -57,13 +57,13 @@ public class OrganisationService {
             boolean isOrganisationExist = organisationRepo.existsById(orgId);
             if(isOrganisationExist){
                 Organisation org = organisationRepo.save(organisation);
-                return new CustomResponse<>(true, org, null, HttpStatus.OK.value());
+                return new CustomResponse<>(true, org, null);
             }else{
                 throw new Exception("organisation does not exist with id "+ orgId+".");
             }
         }catch (Exception e){
             e.printStackTrace();
-            return new CustomResponse<>(false, null, e.getMessage(), HttpStatus.NOT_FOUND.value());
+            return new CustomResponse<>(false, null, e.getMessage());
         }
     }
 
@@ -73,13 +73,13 @@ public class OrganisationService {
             boolean isOrganisationExist = organisationRepo.existsById(organisationId);
             if(isOrganisationExist){
                 organisationRepo.deleteById(organisationId);
-                return new CustomResponse<>(true, "Organisation deleted successfully.", null, HttpStatus.OK.value());
+                return new CustomResponse<>(true, "Organisation deleted successfully.", null);
             }else {
                 throw new Exception("Organisation does not exist with id "+organisationId+".");
             }
         }catch (Exception e){
             e.printStackTrace();
-            return new CustomResponse<>(false, null, e.getMessage(), HttpStatus.NOT_FOUND.value());
+            return new CustomResponse<>(false, null, e.getMessage());
         }
     }
 }

@@ -16,11 +16,11 @@ public class OrderService
     public CustomResponse<Order> createOrders(Order order){
         try{
             Order data = ordersRepository.save(order);
-            return new CustomResponse<>(true, data,null, HttpStatus.CREATED.value());
+            return new CustomResponse<>(true, data,null);
         }
         catch (Exception e){
             e.printStackTrace();
-            return new CustomResponse<>(false, null,e.getMessage(), HttpStatus.BAD_REQUEST.value());
+            return new CustomResponse<>(false, null,e.getMessage());
         }
     }
 

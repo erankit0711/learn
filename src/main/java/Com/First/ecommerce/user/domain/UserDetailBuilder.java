@@ -1,8 +1,6 @@
 package Com.First.ecommerce.user.domain;
 
-import Com.First.ecommerce.address.Address;
-import jakarta.persistence.Column;
-import jakarta.persistence.OneToOne;
+import Com.First.ecommerce.address.domain.Address;
 
 import java.util.List;
 

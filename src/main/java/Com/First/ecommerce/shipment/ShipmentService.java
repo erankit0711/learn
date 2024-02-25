@@ -12,11 +12,11 @@ public class ShipmentService {
     public CustomResponse<Shipment> createShipment(Shipment shipment){
         try {
             Shipment data = shipmentRepository.save(shipment);
-            return new CustomResponse<>(true, data, null, HttpStatus.CREATED.value());
+            return new CustomResponse<>(true, data, null);
         }
         catch (Exception e){
             e.printStackTrace();
-            return new CustomResponse<>(false, null, e.getMessage(), HttpStatus.BAD_REQUEST.value());
+            return new CustomResponse<>(false, null, e.getMessage());
         }
     }
 }

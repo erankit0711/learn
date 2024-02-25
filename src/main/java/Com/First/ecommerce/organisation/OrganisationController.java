@@ -18,34 +18,34 @@ public class OrganisationController {
     @PostMapping("/create")
     public ResponseEntity<CustomResponse<Organisation>> createOrganisation(@RequestBody Organisation organisation){
         CustomResponse<Organisation> response = organisationService.createOrganisation(organisation);
-        return new ResponseEntity<>(response, HttpStatus.valueOf(response.getStatusCode()));
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     //Read
     @GetMapping
     public ResponseEntity<CustomResponse<List<Organisation>>> getAllOrganisation(){
         CustomResponse<List<Organisation>> response = organisationService.getAllOrganisation();
-        return new ResponseEntity(response, HttpStatus.valueOf(response.getStatusCode()));
+        return new ResponseEntity(response, HttpStatus.OK);
     }
 
     @GetMapping("/{organisationId}")
     public ResponseEntity<CustomResponse<Organisation>> getOrganisationById(@PathVariable Long organisationId){
         CustomResponse<Organisation> response = organisationService.getOrganisationById(organisationId);
-        return new ResponseEntity<>(response, HttpStatus.valueOf(response.getStatusCode()));
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     //Update
     @PutMapping("/update")
     public ResponseEntity<CustomResponse<Organisation>> updateOrganisation(@RequestBody Organisation organisation){
         CustomResponse<Organisation> response = organisationService.updateOrganisation(organisation);
-        return new ResponseEntity<>(response, HttpStatus.valueOf(response.getStatusCode()));
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     //Delete
     @DeleteMapping("/{organisationId}")
     public ResponseEntity<CustomResponse<String>> deleteOrganisation(@PathVariable Long organisationId){
         CustomResponse<String> response = organisationService.deleteOrganisation(organisationId);
-        return new ResponseEntity<>(response, HttpStatus.valueOf(response.getStatusCode()));
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 }
