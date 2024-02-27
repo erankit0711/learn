@@ -13,6 +13,7 @@ public class ExceptionHandlingController {
     @ExceptionHandler(DataIntegrityViolationException.class)
     ResponseEntity<CustomResponse<Object>> handleDataIntegrityViolationException(
         DataIntegrityViolationException exception) {
+        exception.printStackTrace();
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
             .body(CustomResponse.failure(null, exception.getMessage()));
@@ -21,6 +22,7 @@ public class ExceptionHandlingController {
     @ExceptionHandler(NullPointerException.class)
     ResponseEntity<CustomResponse<Object>> handleNullPointerException(
         NullPointerException exception) {
+        exception.printStackTrace();
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
             .body(CustomResponse.failure(null, exception.getMessage()));
@@ -29,6 +31,7 @@ public class ExceptionHandlingController {
     @ExceptionHandler(EntityNotFoundException.class)
     ResponseEntity<CustomResponse<Object>> handleEntityNotFoundException(
         EntityNotFoundException exception) {
+        exception.printStackTrace();
         return ResponseEntity
             .status(HttpStatus.NOT_FOUND)
             .body(CustomResponse.failure(null, exception.getMessage()));
@@ -37,6 +40,7 @@ public class ExceptionHandlingController {
     @ExceptionHandler(Exception.class)
     ResponseEntity<CustomResponse<Object>> handleException(
         Exception exception) {
+        exception.printStackTrace();
         return ResponseEntity
             .status(HttpStatus.INTERNAL_SERVER_ERROR)
             .body(CustomResponse.failure(null, exception.getMessage()));
